@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+ web:
+  image: nginx
+  ports:
+   - "80:80"
+  volumes:
+   - ./public_html:/public_html
+   - ./nginx_conf:/etc/nginx/conf.d
+   - /tmp/nginx_logs:/var/log/nginx
+  networks:
+   - nginx-php
+
+ mysql:
+  image: mysql
+  ports:
+   - "3306:3306"
+  volumes:
+   - ./mysql:/mysql
+  environment:
+   - MYSQL_ROOT_PASSWORD=db123
+  networks:
+   - nginx-php
+
+ php:
+  image: php:7.2-fpm
+  volumes:
+  - ./public_html:/public_html
+  ports:
+  - "9000:9000"
+  networks:
+  - nginx-php
+
+networks:
+ nginx-php:
